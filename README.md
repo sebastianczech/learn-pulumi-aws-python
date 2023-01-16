@@ -26,7 +26,7 @@ pulumi destroy --yes
 As infrastructure code is written in Python, it can be easily test as presented in [example unit tests](https://github.com/pulumi/examples/tree/master/testing-unit-py).
 
 ```
-
+pytest
 ```
 
 ## Other
