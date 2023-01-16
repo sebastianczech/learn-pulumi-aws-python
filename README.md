@@ -1,6 +1,6 @@
 # Learn Pulumi - deploy infrastructure into AWS cloud using Python
 
-Repository was created while learning Pulumi and doing [getting started](https://www.pulumi.com/docs/get-started/aws/) for AWS and Python. While working on code, it was used [workspace on GitPod](https://gitpod.io/workspaces).
+Repository was created while learning Pulumi and doing [getting started](https://www.pulumi.com/docs/get-started/aws/) for AWS and Python. 
 
 ## Quickstart
 
@@ -20,3 +20,16 @@ pulumi preview
 pulumi up --yes
 pulumi destroy --yes
 ```
+
+## Testing
+
+As infrastructure code is written in Python, it can be easily test as presented in [example unit tests](https://github.com/pulumi/examples/tree/master/testing-unit-py).
+
+```
+
+```
+
+## Other
+
+TODO - [workspace on GitPod](https://gitpod.io/workspaces).
+
