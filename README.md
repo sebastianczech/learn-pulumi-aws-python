@@ -25,7 +25,7 @@ pulumi destroy --yes
 
 As infrastructure code is written in Python, [it can be easily tested](https://www.pulumi.com/docs/guides/testing/) as presented in [example unit tests](https://github.com/pulumi/examples/tree/master/testing-unit-py).
 
-In order to execute unit tests, run command:
+In order to execute [unit tests](https://www.pulumi.com/docs/guides/testing/unit/), run command:
 
 ```
 pytest
