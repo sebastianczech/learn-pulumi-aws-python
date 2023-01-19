@@ -1,6 +1,5 @@
 # import pytest
 # import pulumi
-# import infra
 
 # class MyMocks(pulumi.runtime.Mocks):
 #     def new_resource(self, args: pulumi.runtime.MockResourceArgs):
@@ -12,6 +11,9 @@
 #     MyMocks(),
 #     preview=False,  # Sets the flag `dry_run`, which is true at runtime during a preview.
 # )
+
+# # It's important to import `infra` _after_ the mocks are defined.
+# import infra
 
 # @pulumi.runtime.test
 # def test_queue_has_tag_name():
@@ -50,6 +52,6 @@ class TestingWithMocks(unittest.TestCase):
         def check_tags(args):
             urn, tags = args
             self.assertIsNotNone(tags, f'queue {urn} must have tags')
-            self.assertIn('Name', tags, 'queue {urn} must have a name tag')
+            self.assertIn('Environment', tags, f'queue {urn} must have a name tag')
 
         return pulumi.Output.all(infra.queue.urn, infra.queue.tags).apply(check_tags)
