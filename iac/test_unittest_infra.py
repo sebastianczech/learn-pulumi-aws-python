@@ -1,11 +1,15 @@
 import unittest
+
 import pulumi
+
 
 class MyMocks(pulumi.runtime.Mocks):
     def new_resource(self, args: pulumi.runtime.MockResourceArgs):
         return [args.name + '_id', args.inputs]
+
     def call(self, args: pulumi.runtime.MockCallArgs):
         return {}
+
 
 pulumi.runtime.set_mocks(
     MyMocks(),
@@ -14,6 +18,7 @@ pulumi.runtime.set_mocks(
 
 # It's important to import `infra` _after_ the mocks are defined.
 import infra
+
 
 class TestingWithMocks(unittest.TestCase):
     @pulumi.runtime.test
