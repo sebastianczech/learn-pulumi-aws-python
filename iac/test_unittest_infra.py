@@ -16,11 +16,6 @@ pulumi.runtime.set_mocks(
 import infra
 
 class TestingWithMocks(unittest.TestCase):
-    # TODO(check 1): Instances have a Name tag.
-    # TODO(check 2): Instances must not use an inline userData script.
-    # TODO(check 3): Instances must not have SSH open to the Internet.
-
-    # check 1: Instances have a Name tag.
     @pulumi.runtime.test
     def test_queue_tags(self):
         def check_tags(args):
