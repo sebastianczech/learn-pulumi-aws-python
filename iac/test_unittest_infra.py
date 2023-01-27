@@ -28,4 +28,5 @@ class TestingWithMocks(unittest.TestCase):
             self.assertIsNotNone(tags, f'queue {urn} must have tags')
             self.assertIn('Environment', tags, f'queue {urn} must have a name tag')
 
-        return pulumi.Output.all(infra.queue.urn, infra.queue.tags).apply(check_tags)
+        return pulumi.Output.all(infra.pulumi_sqs_serverless_rest_api.urn,
+                                 infra.pulumi_sqs_serverless_rest_api.tags).apply(check_tags)

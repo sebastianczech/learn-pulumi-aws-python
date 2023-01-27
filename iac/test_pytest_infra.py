@@ -25,4 +25,5 @@ def test_queue_has_tag_name():
         assert tags is not None
         assert "Environment" in tags
 
-    return pulumi.Output.all(infra.queue.urn, infra.queue.tags).apply(check_tags)
+    return pulumi.Output.all(infra.pulumi_sqs_serverless_rest_api.urn, infra.pulumi_sqs_serverless_rest_api.tags).apply(
+        check_tags)
