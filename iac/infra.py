@@ -15,3 +15,9 @@ pulumi_sns_topic_email_subscription = sns.TopicSubscription("pulumi_sns_topic_em
                                                             topic=pulumi_sns_serverless_rest_api.arn,
                                                             protocol="email",
                                                             endpoint="sebaczech@gmail.com")
+
+# TODO: provision DynamoDB
+
+# TODO: provision Lambda - producer
+
+# TODO: provision Lambda - consumer

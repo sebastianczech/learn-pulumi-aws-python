@@ -27,3 +27,11 @@ def test_queue_has_tag_name():
 
     return pulumi.Output.all(infra.pulumi_sqs_serverless_rest_api.urn, infra.pulumi_sqs_serverless_rest_api.tags).apply(
         check_tags)
+
+# TODO: tests SNS
+
+# TODO: tests DynamoDB
+
+# TODO: Lambda - producer
+
+# TODO: Lambda - consumer
