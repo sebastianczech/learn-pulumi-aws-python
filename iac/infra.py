@@ -17,20 +17,20 @@ pulumi_sns_topic_email_subscription = sns.TopicSubscription("pulumi_sns_topic_em
                                                             endpoint="sebaczech@gmail.com")
 
 # Create DynamoDB table: https://www.pulumi.com/registry/packages/aws/api-docs/dynamodb/table/
-basic_dynamodb_table = dynamodb.Table("pulumi_dynamodb_serverless_rest_api",
-                                      attributes=[
-                                          dynamodb.TableAttributeArgs(
-                                              name="ID",
-                                              type="S",
-                                          ),
-                                      ],
-                                      hash_key="ID",
-                                      tags={
-                                          "Environment": "development",
-                                          "Name": "pulumi_dynamodb_serverless_rest_api",
-                                      },
-                                      read_capacity=20,
-                                      write_capacity=20)
+pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless_rest_api",
+                                                     attributes=[
+                                                         dynamodb.TableAttributeArgs(
+                                                             name="ID",
+                                                             type="S",
+                                                         ),
+                                                     ],
+                                                     hash_key="ID",
+                                                     tags={
+                                                         "Environment": "development",
+                                                         "Name": "pulumi_dynamodb_serverless_rest_api",
+                                                     },
+                                                     read_capacity=20,
+                                                     write_capacity=20)
 
 # TODO: provision Lambda - producer
 
