@@ -38,8 +38,27 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
                                                      read_capacity=20,
                                                      write_capacity=20)
 
-# TODO: provision Lambda - producer
+# TODO: prepare ZIP file with Python code for:
+#  - consumer
+#  - producer
 
+# TODO: create 1 IAM policy for producer:
+#  - lambda_producer_sqs_send_iam_policy
+
+# TODO: create 3 IAM policies for consumer:
+#  - lambda_consumer_sqs_receive_iam_policy
+#  - lambda_consumer_sns_publish_iam_policy
+#  - lambda_consumer_dynamo_put_iam_policy
+
+# TODO: create event source mapping for consumer
+
+# TODO: create Lambda endpoint (function URL) with Lambda permission for producer
+
+# TODO: create cloud watch log group with IAM policy for:
+#  - consumer
+#  - producer
+
+# Create Lambda with IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_iam_for_lambda_producer = iam.Role("pulumi_lambda_producer_role", assume_role_policy="""{
   "Version": "2012-10-17",
   "Statement": [
@@ -65,8 +84,6 @@ pulumi_lambda_producer = lambda_.Function("pulumi_lambda_producer",
                                                   "foo": "bar",
                                               },
                                           ))
-
-# TODO: provision Lambda - consumer
 
 pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_role_policy="""{
   "Version": "2012-10-17",
