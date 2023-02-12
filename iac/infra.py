@@ -1,3 +1,5 @@
+import json
+
 import pulumi as pulumi
 from pulumi_aws import sqs, sns, dynamodb, iam, lambda_
 
@@ -42,9 +44,6 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - consumer
 #  - producer
 
-# TODO: create 1 IAM policy for producer:
-#  - lambda_producer_sqs_send_iam_policy
-
 # TODO: create 3 IAM policies for consumer:
 #  - lambda_consumer_sqs_receive_iam_policy
 #  - lambda_consumer_sns_publish_iam_policy
@@ -58,7 +57,27 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - consumer
 #  - producer
 
-# Create Lambda with IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
+# Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
+pulumi_sqs_serverless_rest_api_arn = pulumi.Output.all(pulumi_sqs_serverless_rest_api.arn).apply(lambda v: f"{v}")
+pulumi.info(f"ARN of SQS: ${pulumi_sqs_serverless_rest_api_arn}")
+pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_sqs_send_iam_policy",
+                                                        path="/",
+                                                        description="IAM policy for Lambda producer & SQS",
+                                                        policy=json.dumps({
+                                                            "Version": "2012-10-17",
+                                                            "Statement": [
+                                                                {
+                                                                    "Sid": "ProducerStatement",
+                                                                    "Action": [
+                                                                        "sqs:SendMessage"
+                                                                    ],
+                                                                    "Effect": "Allow",
+                                                                    "Resource": pulumi_sqs_serverless_rest_api_arn
+                                                                }
+                                                            ]
+                                                        }))
+
+# Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_producer = iam.Role("pulumi_lambda_producer_role", assume_role_policy="""{
   "Version": "2012-10-17",
   "Statement": [
@@ -74,6 +93,12 @@ pulumi_iam_for_lambda_producer = iam.Role("pulumi_lambda_producer_role", assume_
 }
 """)
 
+# Create IAM role policy attachment: https://www.pulumi.com/registry/packages/aws/api-docs/iam/rolepolicyattachment/
+pulumi_lambda_producer_sqs = iam.RolePolicyAttachment("pulumi_lambda_producer_sqs",
+                                                      role=pulumi_iam_for_lambda_producer.name,
+                                                      policy_arn=pulumi_lambda_producer_sqs_send_iam_policy.arn)
+
+# Create Lambda: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_lambda_producer = lambda_.Function("pulumi_lambda_producer",
                                           code=pulumi.FileArchive("files/producer.zip"),
                                           role=pulumi_iam_for_lambda_producer.arn,
@@ -85,6 +110,7 @@ pulumi_lambda_producer = lambda_.Function("pulumi_lambda_producer",
                                               },
                                           ))
 
+# Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_role_policy="""{
   "Version": "2012-10-17",
   "Statement": [
@@ -100,6 +126,7 @@ pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_
 }
 """)
 
+# Create Lambda: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_lambda_consumer = lambda_.Function("pulumi_lambda_consumer",
                                           code=pulumi.FileArchive("files/consumer.zip"),
                                           role=pulumi_iam_for_lambda_producer.arn,
