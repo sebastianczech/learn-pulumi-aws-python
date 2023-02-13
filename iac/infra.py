@@ -58,24 +58,23 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - producer
 
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
-pulumi_sqs_serverless_rest_api_arn = pulumi.Output.all(pulumi_sqs_serverless_rest_api.arn).apply(lambda v: f"{v}")
-pulumi.info(f"ARN of SQS: ${pulumi_sqs_serverless_rest_api_arn}")
 pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_sqs_send_iam_policy",
                                                         path="/",
                                                         description="IAM policy for Lambda producer & SQS",
-                                                        policy=json.dumps({
-                                                            "Version": "2012-10-17",
-                                                            "Statement": [
-                                                                {
-                                                                    "Sid": "ProducerStatement",
-                                                                    "Action": [
-                                                                        "sqs:SendMessage"
-                                                                    ],
-                                                                    "Effect": "Allow",
-                                                                    "Resource": pulumi_sqs_serverless_rest_api_arn
-                                                                }
-                                                            ]
-                                                        }))
+                                                        policy=pulumi_sqs_serverless_rest_api.arn.apply(
+                                                            lambda x: json.dumps({
+                                                                "Version": "2012-10-17",
+                                                                "Statement": [
+                                                                    {
+                                                                        "Sid": "ProducerStatement",
+                                                                        "Action": [
+                                                                            "sqs:SendMessage"
+                                                                        ],
+                                                                        "Effect": "Allow",
+                                                                        "Resource": x
+                                                                    }
+                                                                ]
+                                                            })))
 
 # Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_producer = iam.Role("pulumi_lambda_producer_role", assume_role_policy="""{
