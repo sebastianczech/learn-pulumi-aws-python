@@ -109,6 +109,27 @@ pulumi_lambda_producer = lambda_.Function("pulumi_lambda_producer",
                                               },
                                           ))
 
+# Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
+pulumi_lambda_consumer_sqs_receive_iam_policy = iam.Policy("pulumi_lambda_consumer_sqs_receive_iam_policy",
+                                                           path="/",
+                                                           description="IAM policy for Lambda consumer & SQS",
+                                                           policy=pulumi_sqs_serverless_rest_api.arn.apply(
+                                                               lambda x: json.dumps({
+                                                                   "Version": "2012-10-17",
+                                                                   "Statement": [
+                                                                       {
+                                                                           "Sid": "ConsumerStatementSqs",
+                                                                           "Action": [
+                                                                               "sqs:ReceiveMessage",
+                                                                               "sqs:DeleteMessage",
+                                                                               "sqs:GetQueueAttributes"
+                                                                           ],
+                                                                           "Effect": "Allow",
+                                                                           "Resource": x
+                                                                       }
+                                                                   ]
+                                                               })))
+
 # Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_role_policy="""{
   "Version": "2012-10-17",
@@ -125,10 +146,15 @@ pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_
 }
 """)
 
+# Create IAM role policy attachment: https://www.pulumi.com/registry/packages/aws/api-docs/iam/rolepolicyattachment/
+pulumi_lambda_consumer_sqs = iam.RolePolicyAttachment("pulumi_lambda_consumer_sqs",
+                                                      role=pulumi_iam_for_lambda_consumer.name,
+                                                      policy_arn=pulumi_lambda_consumer_sqs_receive_iam_policy.arn)
+
 # Create Lambda: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_lambda_consumer = lambda_.Function("pulumi_lambda_consumer",
                                           code=pulumi.FileArchive("files/consumer.zip"),
-                                          role=pulumi_iam_for_lambda_producer.arn,
+                                          role=pulumi_iam_for_lambda_consumer.arn,
                                           handler="consumer.lambda_handler",
                                           runtime="python3.9",
                                           environment=lambda_.FunctionEnvironmentArgs(
