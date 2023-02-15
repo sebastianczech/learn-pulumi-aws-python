@@ -130,6 +130,24 @@ pulumi_lambda_consumer_sqs_receive_iam_policy = iam.Policy("pulumi_lambda_consum
                                                                    ]
                                                                })))
 
+pulumi_lambda_consumer_sns_publish_iam_policy = iam.Policy("pulumi_lambda_consumer_sns_publish_iam_policy",
+                                                           path="/",
+                                                           description="IAM policy for Lambda consumer & SNS",
+                                                           policy=pulumi_sns_serverless_rest_api.arn.apply(
+                                                               lambda x: json.dumps({
+                                                                   "Version": "2012-10-17",
+                                                                   "Statement": [
+                                                                       {
+                                                                           "Sid": "ConsumerStatementSns",
+                                                                           "Action": [
+                                                                               "sns:Publish"
+                                                                           ],
+                                                                           "Effect": "Allow",
+                                                                           "Resource": x
+                                                                       }
+                                                                   ]
+                                                               })))
+
 # Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_role_policy="""{
   "Version": "2012-10-17",
@@ -150,6 +168,10 @@ pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_
 pulumi_lambda_consumer_sqs = iam.RolePolicyAttachment("pulumi_lambda_consumer_sqs",
                                                       role=pulumi_iam_for_lambda_consumer.name,
                                                       policy_arn=pulumi_lambda_consumer_sqs_receive_iam_policy.arn)
+
+pulumi_lambda_consumer_sns = iam.RolePolicyAttachment("pulumi_lambda_consumer_sns",
+                                                      role=pulumi_iam_for_lambda_consumer.name,
+                                                      policy_arn=pulumi_lambda_consumer_sns_publish_iam_policy.arn)
 
 # Create Lambda: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_lambda_consumer = lambda_.Function("pulumi_lambda_consumer",
