@@ -44,11 +44,6 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - consumer
 #  - producer
 
-# TODO: create 3 IAM policies for consumer:
-#  - lambda_consumer_sqs_receive_iam_policy
-#  - lambda_consumer_sns_publish_iam_policy
-#  - lambda_consumer_dynamo_put_iam_policy
-
 # TODO: create event source mapping for consumer
 
 # TODO: create Lambda endpoint (function URL) with Lambda permission for producer
