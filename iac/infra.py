@@ -203,14 +203,14 @@ pulumi_lambda_consumer = lambda_.Function("pulumi_lambda_consumer",
                                           ))
 
 # Create CloudWatch log groups: https://www.pulumi.com/registry/packages/aws/api-docs/cloudwatch/loggroup/
-pulumi_lambda_producer_log_group = cloudwatch.LogGroup("pulumi_lambda_producer_log_group",
+pulumi_lambda_producer_log_group = cloudwatch.LogGroup("/aws/lambda/pulumi_lambda_producer_log_group",
                                                        retention_in_days=1,
                                                        tags={
                                                            "Environment": "development",
                                                            "Name": "pulumi_lambda_producer_log_group",
                                                        })
 
-pulumi_lambda_consumer_log_group = cloudwatch.LogGroup("pulumi_lambda_consumer_log_group",
+pulumi_lambda_consumer_log_group = cloudwatch.LogGroup("/aws/lambda/pulumi_lambda_consumer_log_group",
                                                        retention_in_days=1,
                                                        tags={
                                                            "Environment": "development",
