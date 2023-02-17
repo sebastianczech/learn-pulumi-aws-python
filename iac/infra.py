@@ -1,7 +1,7 @@
 import json
 
 import pulumi as pulumi
-from pulumi_aws import sqs, sns, dynamodb, iam, lambda_
+from pulumi_aws import sqs, sns, dynamodb, iam, lambda_, cloudwatch
 
 # Create SQS queue: https://www.pulumi.com/registry/packages/aws/api-docs/sqs/queue/
 pulumi_sqs_serverless_rest_api = sqs.Queue("pulumi_sqs_serverless_rest_api",
@@ -48,7 +48,7 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 
 # TODO: create Lambda endpoint (function URL) with Lambda permission for producer
 
-# TODO: create cloud watch log group with IAM policy for:
+# TODO: create cloud watch IAM policy for:
 #  - consumer
 #  - producer
 
@@ -201,3 +201,18 @@ pulumi_lambda_consumer = lambda_.Function("pulumi_lambda_consumer",
                                                   "foo": "bar",
                                               },
                                           ))
+
+# Create CloudWatch log groups: https://www.pulumi.com/registry/packages/aws/api-docs/cloudwatch/loggroup/
+pulumi_lambda_producer_log_group = cloudwatch.LogGroup("pulumi_lambda_producer_log_group",
+                                                       retention_in_days=1,
+                                                       tags={
+                                                           "Environment": "development",
+                                                           "Name": "pulumi_lambda_producer_log_group",
+                                                       })
+
+pulumi_lambda_consumer_log_group = cloudwatch.LogGroup("pulumi_lambda_consumer_log_group",
+                                                       retention_in_days=1,
+                                                       tags={
+                                                           "Environment": "development",
+                                                           "Name": "pulumi_lambda_consumer_log_group",
+                                                       })
