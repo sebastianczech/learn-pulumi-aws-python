@@ -44,13 +44,13 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - consumer
 #  - producer
 
-# TODO: create event source mapping for consumer
+# TODO: create event source mapping for consumer - event_source_mapping_sqs_lambda_consumer
 
-# TODO: create Lambda endpoint (function URL) with Lambda permission for producer
+# TODO: create Lambda endpoint (function URL) with Lambda permission for producer - lambda_producer_endpoint
 
 # TODO: create cloud watch IAM policy for:
-#  - consumer
-#  - producer
+#  - consumer - lambda_iam_consumer_logging
+#  - producer - lambda_iam_producer_logging
 
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_sqs_send_iam_policy",
