@@ -45,12 +45,10 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - producer
 
 # TODO: create event source mapping for consumer - event_source_mapping_sqs_lambda_consumer
+# Create Lambda event source mapping: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/eventsourcemapping/
 
 # TODO: create Lambda endpoint (function URL) with Lambda permission for producer - lambda_producer_endpoint
-
-# TODO: create cloud watch IAM policy for:
-#  - consumer - lambda_iam_consumer_logging
-#  - producer - lambda_iam_producer_logging
+# Create Lambda function URL: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/functionurl/
 
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_sqs_send_iam_policy",
@@ -70,6 +68,24 @@ pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_
                                                                     }
                                                                 ]
                                                             })))
+
+pulumi_lambda_iam_producer_logging = iam.Policy("pulumi_lambda_iam_producer_logging",
+                                                path="/",
+                                                description="IAM policy for Lambda producer & CloudWatch logs",
+                                                policy=json.dumps({
+                                                    "Version": "2012-10-17",
+                                                    "Statement": [
+                                                        {
+                                                            "Action": [
+                                                                "logs:CreateLogGroup",
+                                                                "logs:CreateLogStream",
+                                                                "logs:PutLogEvents"
+                                                            ],
+                                                            "Resource": "arn:aws:logs:*:*:*",
+                                                            "Effect": "Allow"
+                                                        }
+                                                    ]
+                                                }))
 
 # Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_producer = iam.Role("pulumi_lambda_producer_role", assume_role_policy="""{
@@ -91,6 +107,10 @@ pulumi_iam_for_lambda_producer = iam.Role("pulumi_lambda_producer_role", assume_
 pulumi_lambda_producer_sqs = iam.RolePolicyAttachment("pulumi_lambda_producer_sqs",
                                                       role=pulumi_iam_for_lambda_producer.name,
                                                       policy_arn=pulumi_lambda_producer_sqs_send_iam_policy.arn)
+
+pulumi_lambda_producer_logs = iam.RolePolicyAttachment("pulumi_lambda_producer_logs",
+                                                       role=pulumi_iam_for_lambda_producer.name,
+                                                       policy_arn=pulumi_lambda_iam_producer_logging.arn)
 
 # Create Lambda: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_lambda_producer = lambda_.Function("pulumi_lambda_producer",
@@ -161,6 +181,24 @@ pulumi_lambda_consumer_dynamo_put_iam_policy = iam.Policy("pulumi_lambda_consume
                                                                   ]
                                                               })))
 
+pulumi_lambda_iam_consumer_logging = iam.Policy("pulumi_lambda_iam_consumer_logging",
+                                                path="/",
+                                                description="IAM policy for Lambda consumer & CloudWatch logs",
+                                                policy=json.dumps({
+                                                    "Version": "2012-10-17",
+                                                    "Statement": [
+                                                        {
+                                                            "Action": [
+                                                                "logs:CreateLogGroup",
+                                                                "logs:CreateLogStream",
+                                                                "logs:PutLogEvents"
+                                                            ],
+                                                            "Resource": "arn:aws:logs:*:*:*",
+                                                            "Effect": "Allow"
+                                                        }
+                                                    ]
+                                                }))
+
 # Create IAM role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 pulumi_iam_for_lambda_consumer = iam.Role("pulumi_lambda_consumer_role", assume_role_policy="""{
   "Version": "2012-10-17",
@@ -189,6 +227,10 @@ pulumi_lambda_consumer_sns = iam.RolePolicyAttachment("pulumi_lambda_consumer_sn
 pulumi_lambda_consumer_dynamodb = iam.RolePolicyAttachment("pulumi_lambda_consumer_dynamodb",
                                                            role=pulumi_iam_for_lambda_consumer.name,
                                                            policy_arn=pulumi_lambda_consumer_dynamo_put_iam_policy.arn)
+
+pulumi_lambda_consumer_logs = iam.RolePolicyAttachment("pulumi_lambda_consumer_logs",
+                                                       role=pulumi_iam_for_lambda_consumer.name,
+                                                       policy_arn=pulumi_lambda_iam_consumer_logging.arn)
 
 # Create Lambda: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/function/
 pulumi_lambda_consumer = lambda_.Function("pulumi_lambda_consumer",
