@@ -44,9 +44,6 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - consumer
 #  - producer
 
-# TODO: create event source mapping for consumer - event_source_mapping_sqs_lambda_consumer
-# Create Lambda event source mapping: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/eventsourcemapping/
-
 # TODO: create Lambda endpoint (function URL) with Lambda permission for producer - lambda_producer_endpoint
 # Create Lambda function URL: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/functionurl/
 
@@ -258,3 +255,9 @@ pulumi_lambda_consumer_log_group = cloudwatch.LogGroup("/aws/lambda/pulumi_lambd
                                                            "Environment": "development",
                                                            "Name": "pulumi_lambda_consumer_log_group",
                                                        })
+
+# Create Lambda event source mapping: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/eventsourcemapping/
+pulumi_event_source_mapping_sqs_lambda_consumer = lambda_.EventSourceMapping(
+    "pulumi_event_source_mapping_sqs_lambda_consumer",
+    event_source_arn=pulumi_sqs_serverless_rest_api.arn,
+    function_name=pulumi_lambda_consumer.arn)
