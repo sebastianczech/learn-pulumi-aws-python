@@ -40,7 +40,7 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
                                                      read_capacity=20,
                                                      write_capacity=20)
 
-# TODO: prepare ZIP file with Python code for:
+# TODO: prepare ZIP file with Jinja template for Python code for:
 #  - consumer
 #  - producer
 
