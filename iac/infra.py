@@ -137,6 +137,17 @@ pulumi_lambda_producer_endpoint = lambda_.FunctionUrl("pulumi_lambda_producer_en
                                                           max_age=86400,
                                                       ))
 
+# Get user: https://www.pulumi.com/registry/packages/aws/api-docs/iam/getuser/
+iam_user_seba = iam.get_user(user_name="seba")
+
+# Create Lambda permission: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/permission/
+allow_iam_user = lambda_.Permission("AllowExecutionForIamUser",
+                                    action="lambda:InvokeFunctionUrl",
+                                    function=pulumi_lambda_producer.name,
+                                    principal=iam_user_seba.arn,
+                                    function_url_auth_type="AWS_IAM"
+                                    )
+
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_consumer_sqs_receive_iam_policy = iam.Policy("pulumi_lambda_consumer_sqs_receive_iam_policy",
                                                            path="/",
