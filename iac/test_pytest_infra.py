@@ -42,6 +42,8 @@ def test_dynamodb_has_tag_name():
     return pulumi.Output.all(infra.pulumi_dynamodb_serverless_rest_api.urn,
                              infra.pulumi_dynamodb_serverless_rest_api.tags).apply(check_tags)
 
-# TODO: Lambda:
+# TODO: test Lambda with all components for:
 #  - producer
 #  - consumer
+
+# TODO: split tests into multiple files

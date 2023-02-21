@@ -288,3 +288,5 @@ pulumi_event_source_mapping_sqs_lambda_consumer = lambda_.EventSourceMapping(
     "pulumi_event_source_mapping_sqs_lambda_consumer",
     event_source_arn=pulumi_sqs_serverless_rest_api.arn,
     function_name=pulumi_lambda_consumer.arn)
+
+# TODO: split infra into multiple files
