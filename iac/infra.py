@@ -44,9 +44,6 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
 #  - consumer
 #  - producer
 
-# TODO: create Lambda endpoint (function URL) with Lambda permission for producer - lambda_producer_endpoint
-# Create Lambda function URL: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/functionurl/
-
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_sqs_send_iam_policy",
                                                         path="/",
@@ -120,6 +117,25 @@ pulumi_lambda_producer = lambda_.Function("pulumi_lambda_producer",
                                                   "foo": "bar",
                                               },
                                           ))
+
+# Create Lambda function URL: https://www.pulumi.com/registry/packages/aws/api-docs/lambda/functionurl/
+pulumi_lambda_producer_endpoint = lambda_.FunctionUrl("pulumi_lambda_producer_endpoint",
+                                                      function_name=pulumi_lambda_producer.name,
+                                                      authorization_type="AWS_IAM",
+                                                      cors=lambda_.FunctionUrlCorsArgs(
+                                                          allow_credentials=True,
+                                                          allow_origins=["*"],
+                                                          allow_methods=["*"],
+                                                          allow_headers=[
+                                                              "date",
+                                                              "keep-alive",
+                                                          ],
+                                                          expose_headers=[
+                                                              "keep-alive",
+                                                              "date",
+                                                          ],
+                                                          max_age=86400,
+                                                      ))
 
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_consumer_sqs_receive_iam_policy = iam.Policy("pulumi_lambda_consumer_sqs_receive_iam_policy",
