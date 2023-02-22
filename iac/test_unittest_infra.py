@@ -16,8 +16,8 @@ pulumi.runtime.set_mocks(
     preview=False,  # Sets the flag `dry_run`, which is true at runtime during a preview.
 )
 
-# It's important to import `infra` _after_ the mocks are defined.
-import infra
+# It's important to import `infra_integration` _after_ the mocks are defined.
+from infra_integration import pulumi_sqs_serverless_rest_api
 
 
 class TestingWithMocks(unittest.TestCase):
@@ -28,5 +28,5 @@ class TestingWithMocks(unittest.TestCase):
             self.assertIsNotNone(tags, f'queue {urn} must have tags')
             self.assertIn('Environment', tags, f'queue {urn} must have a name tag')
 
-        return pulumi.Output.all(infra.pulumi_sqs_serverless_rest_api.urn,
-                                 infra.pulumi_sqs_serverless_rest_api.tags).apply(check_tags)
+        return pulumi.Output.all(pulumi_sqs_serverless_rest_api.urn,
+                                 pulumi_sqs_serverless_rest_api.tags).apply(check_tags)
