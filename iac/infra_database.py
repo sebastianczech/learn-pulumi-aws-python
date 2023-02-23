@@ -13,5 +13,5 @@ pulumi_dynamodb_serverless_rest_api = dynamodb.Table("pulumi_dynamodb_serverless
                                                          "Environment": "development",
                                                          "Name": "pulumi_dynamodb_serverless_rest_api",
                                                      },
-                                                     read_capacity=10,
-                                                     write_capacity=10)
+                                                     read_capacity=1,
+                                                     write_capacity=1)
