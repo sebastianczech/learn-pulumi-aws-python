@@ -1,14 +1,26 @@
 import json
 
 import pulumi as pulumi
+from jinja2 import Environment, FileSystemLoader
 from pulumi_aws import iam, lambda_, cloudwatch
 
-from infra_integration import pulumi_sqs_serverless_rest_api, pulumi_sns_serverless_rest_api
 from infra_database import pulumi_dynamodb_serverless_rest_api
+from infra_integration import pulumi_sqs_serverless_rest_api, pulumi_sns_serverless_rest_api
+
+# TODO: resolve issue with getting ID of resource as string
+
+# Get Jinja2 template and render Python script
+environment = Environment(loader=FileSystemLoader("files/"))
+template = environment.get_template("consumer.jinja2")
+content = template.render(
+    topic_url=pulumi_sns_serverless_rest_api.id.apply(lambda v: f"{v}"),
+    table_url=pulumi_dynamodb_serverless_rest_api.id.apply(lambda v: f"{v}")
+)
+with open("files/consumer.py", mode="w", encoding="utf-8") as rendered:
+    rendered.write(content)
 
 # TODO: prepare ZIP file with Jinja template for Python code for:
 #  - consumer
-
 
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_consumer_sqs_receive_iam_policy = iam.Policy("pulumi_lambda_consumer_sqs_receive_iam_policy",
