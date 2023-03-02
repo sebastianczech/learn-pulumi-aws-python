@@ -6,20 +6,8 @@ import ast
 print('Loading function')
 sns = boto3.client('sns')
 dynamodb = boto3.client('dynamodb')
-topic_url = "Calling __str__ on an Output[T] is not supported.
-
-To get the value of an Output[T] as an Output[str] consider:
-1. o.apply(lambda v: f"prefix{v}suffix")
-
-See https://pulumi.io/help/outputs for more details.
-This function may throw in a future version of Pulumi."
-table_url = "Calling __str__ on an Output[T] is not supported.
-
-To get the value of an Output[T] as an Output[str] consider:
-1. o.apply(lambda v: f"prefix{v}suffix")
-
-See https://pulumi.io/help/outputs for more details.
-This function may throw in a future version of Pulumi."
+topic_url = "arn:aws:sns:us-east-1:884522662008:pulumi_sns_serverless_rest_api-d42de5a"
+table_url = "pulumi_dynamodb_serverless_rest_api-cb19afd"
 
 
 def lambda_handler(event, context):

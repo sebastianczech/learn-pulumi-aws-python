@@ -9,13 +9,7 @@ import boto3
 
 print('Loading function')
 sqs = boto3.client('sqs')
-queue_url = "Calling __str__ on an Output[T] is not supported.
-
-To get the value of an Output[T] as an Output[str] consider:
-1. o.apply(lambda v: f"prefix{v}suffix")
-
-See https://pulumi.io/help/outputs for more details.
-This function may throw in a future version of Pulumi."
+queue_url = "https://sqs.us-east-1.amazonaws.com/884522662008/pulumi_sqs_serverless_rest_api-9581555"
 
 
 def lambda_handler(event, context):
