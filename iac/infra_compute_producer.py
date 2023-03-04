@@ -21,6 +21,9 @@ zipObj = ZipFile('files/producer.zip', 'w')
 zipObj.write('files/producer.py')
 zipObj.close()
 
+# TODO: fix problem with zip - now in zip there is files/producer.py instead producer.py (without files directory)
+# [ERROR] Runtime.ImportModuleError: Unable to import module 'producer': No module named 'producer' Traceback (most recent call last):
+
 # TODO: think how to use https://www.pulumi.com/docs/intro/concepts/assets-archives/ (now Python is zipped every time)
 # asset_archive = pulumi.AssetArchive({
 #     "file": pulumi.StringAsset("Hello, world!"),
