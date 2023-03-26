@@ -18,11 +18,10 @@ with open("files/producer.py", mode="w", encoding="utf-8") as rendered:
 
 # Prepare ZIP file with generated Python code
 zipObj = ZipFile('files/producer.zip', 'w')
-zipObj.write('files/producer.py')
-zipObj.close()
 
-# TODO: fix problem with zip - now in zip there is files/producer.py instead producer.py (without files directory)
-# [ERROR] Runtime.ImportModuleError: Unable to import module 'producer': No module named 'producer' Traceback (most recent call last):
+# Fix problem with zip - now in zip there is producer.py instead files/producer.py (without files directory)
+zipObj.write(filename='files/producer.py', arcname='producer.py')
+zipObj.close()
 
 # TODO: think how to use https://www.pulumi.com/docs/intro/concepts/assets-archives/ (now Python is zipped every time)
 # asset_archive = pulumi.AssetArchive({

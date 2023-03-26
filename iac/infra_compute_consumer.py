@@ -20,7 +20,9 @@ with open("files/consumer.py", mode="w", encoding="utf-8") as rendered:
 
 # Prepare ZIP file with generated Python code
 zipObj = ZipFile('files/consumer.zip', 'w')
-zipObj.write('files/consumer.py')
+
+# Fix problem with zip - now in zip there is consumer.py instead files/producer.py (without files directory)
+zipObj.write(filename='files/consumer.py', arcname='consumer.py')
 zipObj.close()
 
 # TODO: think how to use https://www.pulumi.com/docs/intro/concepts/assets-archives/ (now Python is zipped every time)
