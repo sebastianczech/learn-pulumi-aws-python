@@ -23,12 +23,6 @@ zipObj = ZipFile('files/producer.zip', 'w')
 zipObj.write(filename='files/producer.py', arcname='producer.py')
 zipObj.close()
 
-# TODO: think how to use https://www.pulumi.com/docs/intro/concepts/assets-archives/ (now Python is zipped every time)
-# asset_archive = pulumi.AssetArchive({
-#     "file": pulumi.StringAsset("Hello, world!"),
-#     "folder": pulumi.FileArchive("./folder")
-# })
-
 # Create IAM policy: https://www.pulumi.com/registry/packages/aws/api-docs/iam/policy/
 pulumi_lambda_producer_sqs_send_iam_policy = iam.Policy("pulumi_lambda_producer_sqs_send_iam_policy",
                                                         path="/",
